@@ -1,0 +1,64 @@
+﻿<Window x:Class="EMedia.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        Title="Emedia" Height="600" Width="1000">
+    <Grid>
+        
+        <TabControl HorizontalAlignment="Left" Height="440" Margin="15, 0, 15, 0" VerticalAlignment="Top" Width="790">
+			<TabItem Header="WAV metadane" Margin="-2,-2,-4,-3" Width="190">
+				<StackPanel Width="730" Height="400" Background="#FFE5E5E5">
+                    <Button Name="btnLoadWAV" Content="Wczytaj WAV" Click="BtnLoadWAV_Click" Width="200" Height="50"/>
+                    <ListBox Name="listTemplate" HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0.2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="100" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding LblName}" />
+                                    <TextBlock Grid.Column="1" Text="{Binding ValName}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+			</TabItem>
+           
+            <TabItem Header="DFT" Margin="-2,-2,-4,-3" Width="180">
+                <DVC:Chart Name="chartFFT" Height="410" Width="800">
+                    <DVC:Chart.Series>
+                        <DVC:LineSeries Title="FFTData" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}">
+                            <DVC:LineSeries.DataPointStyle>
+                            <Style TargetType="DVC:LineDataPoint">
+                                <Setter Property="Width" Value="4"/>
+                                <Setter Property="Height" Value="4"/>
+                            </Style>
+                            </DVC:LineSeries.DataPointStyle>
+                        </DVC:LineSeries>
+
+                    </DVC:Chart.Series>
+                </DVC:Chart>
+            </TabItem>
+            <TabItem Header="Szyfrowanie" Margin="-2,-2,-4,-3" Width="190">
+                <StackPanel Width="780" Height="400" Background="#FFE5E5E5" Margin="0,0,-2,0" HorizontalAlignment="Left">
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250" />
+                            <ColumnDefinition Width="75" />
+                            <ColumnDefinition Width="250" />
+                            <ColumnDefinition Width="75" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Name="btnCipher" Content="Szyfruj" Width="200" Height="50" HorizontalAlignment="Left" Margin="5 5 0 0" Click="BtnCipher_Click"></Button>
+                        <Button Grid.Column="1" Name="btnPlayCipher" Content="&#9654;" Width="50" Height="50" HorizontalAlignment="Left" Margin="5 5 0 0" Click="BtnPlayCipher_Click"></Button>
+                        <Button Grid.Column="2" Name="btnDecipher" Content="Deszyfruj" Width="200" Height="50" HorizontalAlignment="Center" Margin="5 5 0 0" Click="BtnDecipher_Click"></Button>
+                        <Button Grid.Column="3" Name="btnPlayDecipher" Content="&#9654;" Width="50" Height="50" HorizontalAlignment="Left" Margin="5 5 0 0" Click="BtnPlayDecipher_Click"></Button>
+                    </Grid>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>
