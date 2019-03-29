@@ -62,25 +62,37 @@ namespace EMedia
         {
             var basePath = AppDomain.CurrentDomain.BaseDirectory;
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = System.IO.Path.Combine(basePath, @"./../../cipher.wav");
+            player.SoundLocation = System.IO.Path.Combine(basePath, @"./cipher.wav");
             player.Load();
             player.Play();
         }
 
         private void BtnPlayDecipher_Click(object sender, RoutedEventArgs e)
         {
-
+            var basePath = AppDomain.CurrentDomain.BaseDirectory;
+            SoundPlayer player = new SoundPlayer();
+            player.SoundLocation = System.IO.Path.Combine(basePath, @"./decipher.wav");
+            player.Load();
+            player.Play();
         }
 
         private void BtnDecipher_Click(object sender, RoutedEventArgs e)
         {
-
+            WAVHeader cipheredFile = new WAVReader("./cipher.wav").ReadWAVFile();
+            Cipher cipher = new Cipher(cipheredFile.WavData.OriginalData);
+            float[] deciphered = cipher.getDecipheredData();
+            wavHeader.WavData.OriginalData = wavHeader.WavData.Normalize(deciphered);  
+            WAVWriter wavWriter = new WAVWriter("decipher.wav");
+            wavWriter.WriteWAVFile(wavHeader);
         }
 
         private void BtnCipher_Click(object sender, RoutedEventArgs e)
         {
-            Cipher cipher = new Cipher(wavHeader.WavData.ChannelData);
-            cipher.getCipheredData();
+            Cipher cipher = new Cipher(wavHeader.WavData.OriginalData);
+            float[] encoded = cipher.getCipheredData();
+            wavHeader.WavData.OriginalData = wavHeader.WavData.Normalize(encoded);
+            WAVWriter wavWriter = new WAVWriter();
+            wavWriter.WriteWAVFile(wavHeader);
         }
 
         private void BtnLoadWAV_Click(object sender, RoutedEventArgs e)

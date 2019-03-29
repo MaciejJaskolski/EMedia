@@ -3,9 +3,9 @@ namespace EMedia
 {
     class Cipher
     {
-        public float[] Data { get; set; }
+        public byte[] Data { get; set; }
 
-        public Cipher(float[] data)
+        public Cipher(byte[] data)
         {
             this.Data = data;
         }
@@ -13,9 +13,13 @@ namespace EMedia
         public float[] getCipheredData()
         {
             RSA rsa = new RSA();
-            float result = rsa.GetCipheredValue(983415);
-            float[] r = new float[1];
-            return r;
+            return rsa.GetCipheredValue(Data);         
+        }
+
+        public float[] getDecipheredData()
+        {
+            RSA rsa = new RSA();
+            return rsa.getDecipheredValue(Data);
         }
 
     }

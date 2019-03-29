@@ -1,16 +1,17 @@
-﻿namespace EMedia
+﻿using System;
+
+namespace EMedia
 {
     class RSA
     {
         private readonly int p = 1123;
         private readonly int q = 1237;
-        private readonly int e = 834781;
-        private int d;
+        private long e = 834781;
+        private long d = 1087477;
         private int n;
 
         public RSA()
         {
-            this.d = this.getD();
             this.n = this.getN();
         }
 
@@ -19,29 +20,40 @@
             return this.p*this.q;
         }
 
-        private int getD()
+        private long CipherLoop(long exponent, long originalValue)
         {
-            int fi = (this.p - 1) * (this.q - 1);
-            return e % fi;
-        } 
-
-        public float GetCipheredValue(float normalSample)
-        {
-            float val = 1, pow = this.e;
-            for(int q = 1087477; q > 0;q/=2)
+            long cipheredValue = 1;
+            for(long i = exponent; i > 0; i/=2)
             {
-                if ((q % 2) != 0)
+                if(i % 2 == 1)
                 {
-                    val = (val / 2 * pow) % this.n;
+                    cipheredValue = (originalValue * cipheredValue) % this.n;
                 }
-                pow = (pow * pow) % this.n;
+                originalValue = (originalValue * originalValue) % this.n;
             }
-            return val;
+            return cipheredValue;
         }
 
-        public float getDecipheredValue(float cipheredSample)
+        public float[] GetCipheredValue(byte[] normalSample)
         {
-            return 0;
+            float[] rsaData = new float[normalSample.Length];
+            for(int i =0;i<normalSample.Length;i++)
+            {
+                long value = normalSample[i] % this.n;
+                rsaData[i] = this.CipherLoop(this.e, value);
+            }
+            return rsaData;
+        }
+
+        public float[] getDecipheredValue(byte[] cipheredSample)
+        {
+            float[] rsaData = new float[cipheredSample.Length];
+            for (int i = 0; i < cipheredSample.Length; i++)
+            {
+                long value = cipheredSample[i] % this.n;
+                rsaData[i] = this.CipherLoop(this.d, value);
+            }
+            return rsaData;
         }
     }
 }

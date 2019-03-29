@@ -184,6 +184,7 @@
     <Compile Include="WAVData.cs" />
     <Compile Include="WAVHeader.cs" />
     <Compile Include="WAVReader.cs" />
+    <Compile Include="WAVWriter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
