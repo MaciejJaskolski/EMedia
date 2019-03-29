@@ -28,18 +28,31 @@
 			</TabItem>
            
             <TabItem Header="DFT" Margin="-2,-2,-4,-3" Width="180">
-                <DVC:Chart Name="chartFFT" Height="410" Width="800">
+                <DVC:Chart Name="chartFFT" Height="410" Width="800" Title="FFT">
                     <DVC:Chart.Series>
                         <DVC:LineSeries Title="FFTData" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}">
                             <DVC:LineSeries.DataPointStyle>
-                            <Style TargetType="DVC:LineDataPoint">
-                                <Setter Property="Width" Value="4"/>
-                                <Setter Property="Height" Value="4"/>
-                            </Style>
+                                <Style TargetType="DVC:LineDataPoint">
+                                    <Setter Property="Width" Value="4"/>
+                                    <Setter Property="Height" Value="4"/>
+                                </Style>
                             </DVC:LineSeries.DataPointStyle>
                         </DVC:LineSeries>
-
                     </DVC:Chart.Series>
+                    <DVC:Chart.Axes>
+                        <DVC:LinearAxis
+                        Orientation="Y"
+                        Title="Amplituda [Db]"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        />
+                        <DVC:LinearAxis
+                        Orientation="X"
+                        Title="Czestotliwosc [Hz]"             
+                        FontSize="14"
+                        FontWeight="Bold"
+                        />
+                    </DVC:Chart.Axes>
                 </DVC:Chart>
             </TabItem>
             <TabItem Header="Szyfrowanie" Margin="-2,-2,-4,-3" Width="190">

@@ -1,6 +1,9 @@
 ﻿
 namespace EMedia
 {
+    /*
+     * Class used to cipher/decipher data
+     */ 
     class Cipher
     {
         public byte[] Data { get; set; }
@@ -16,10 +19,10 @@ namespace EMedia
             return rsa.GetCipheredValue(Data);         
         }
 
-        public float[] getDecipheredData()
+        public float[] getDecipheredData(float[] cipheredData)
         {
             RSA rsa = new RSA();
-            return rsa.getDecipheredValue(Data);
+            return rsa.getDecipheredValue(cipheredData);
         }
 
     }

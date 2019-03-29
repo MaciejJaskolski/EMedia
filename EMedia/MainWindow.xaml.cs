@@ -13,6 +13,9 @@ namespace EMedia
     public partial class MainWindow : Window
     {
         WAVHeader wavHeader;
+        bool isCipheredFilePlaying = false;
+        bool isDecipheredFilePlaying = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -55,46 +58,100 @@ namespace EMedia
                 points.Add(new KeyValuePair<double, double>(p.X, p.Y));
             }
             ((LineSeries)chartFFT.Series[0]).ItemsSource = points;
-            
         }
 
+        /**
+         * Loads and plays/stops ciphered file
+         */
         private void BtnPlayCipher_Click(object sender, RoutedEventArgs e)
         {
             var basePath = AppDomain.CurrentDomain.BaseDirectory;
             SoundPlayer player = new SoundPlayer();
             player.SoundLocation = System.IO.Path.Combine(basePath, @"./cipher.wav");
             player.Load();
-            player.Play();
+            if (!isCipheredFilePlaying)
+            {
+                this.isCipheredFilePlaying = true;
+                btnPlayCipher.Content = "\u2016";
+                player.Play();
+            }
+            else
+            {
+                this.isCipheredFilePlaying = false;
+                btnPlayCipher.Content = "\u25B6";
+                player.Stop();
+            }    
         }
 
+        /**
+         * Loads and plays/stops deciphered file
+         */
         private void BtnPlayDecipher_Click(object sender, RoutedEventArgs e)
         {
             var basePath = AppDomain.CurrentDomain.BaseDirectory;
             SoundPlayer player = new SoundPlayer();
             player.SoundLocation = System.IO.Path.Combine(basePath, @"./decipher.wav");
             player.Load();
-            player.Play();
+            if (!isDecipheredFilePlaying)
+            {
+                this.isDecipheredFilePlaying = true;
+                btnPlayDecipher.Content = "\u2016";
+                player.Play();
+            }
+            else
+            {
+                this.isDecipheredFilePlaying = false;
+                btnPlayDecipher.Content = "\u25B6";
+                player.Stop();
+            }
         }
 
+        /**
+         * Loads ciphered file, groups 4 bytes into a float, decipheres it and saves into a file
+         */
         private void BtnDecipher_Click(object sender, RoutedEventArgs e)
         {
-            WAVHeader cipheredFile = new WAVReader("./cipher.wav").ReadWAVFile();
-            Cipher cipher = new Cipher(cipheredFile.WavData.OriginalData);
-            float[] deciphered = cipher.getDecipheredData();
-            wavHeader.WavData.OriginalData = wavHeader.WavData.Normalize(deciphered);  
-            WAVWriter wavWriter = new WAVWriter("decipher.wav");
-            wavWriter.WriteWAVFile(wavHeader);
+            try
+            {
+                WAVHeader cipheredFile = new WAVReader("./cipher.wav").ReadWAVFile();
+                Cipher cipher = new Cipher(cipheredFile.WavData.OriginalData);
+                float[] decipheredFloats = wavHeader.WavData.Denormalize();
+                float[] deciphered = cipher.getDecipheredData(decipheredFloats);
+                WAVWriter wavWriter = new WAVWriter("decipher.wav");
+                wavWriter.WriteWAVFile(wavHeader);
+                System.Windows.MessageBox.Show("Plik zostal odszyfrowany i zapisany do pliku.");
+            }
+            catch(Exception ex)
+            {
+                System.Windows.MessageBox.Show("Najpierw trzeba wczytac plik.");
+            }
+       
         }
 
+        /**
+         * Makes an array of 4 bytes from ciphered float saves into a file
+         */
         private void BtnCipher_Click(object sender, RoutedEventArgs e)
         {
-            Cipher cipher = new Cipher(wavHeader.WavData.OriginalData);
-            float[] encoded = cipher.getCipheredData();
-            wavHeader.WavData.OriginalData = wavHeader.WavData.Normalize(encoded);
-            WAVWriter wavWriter = new WAVWriter();
-            wavWriter.WriteWAVFile(wavHeader);
+            try
+            {
+                Cipher cipher = new Cipher(wavHeader.WavData.OriginalData);
+                float[] encoded = cipher.getCipheredData();
+                wavHeader.WavData.OriginalData = wavHeader.WavData.Normalize(encoded);
+                WAVWriter wavWriter = new WAVWriter();
+                wavWriter.WriteWAVFile(wavHeader);
+                System.Windows.MessageBox.Show("Plik zostal zaszyfrowany i zapisany do pliku.");
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show("Najpierw trzeba wczytac plik.");
+
+            }
         }
 
+        /**
+         * Loads specified file
+         */
         private void BtnLoadWAV_Click(object sender, RoutedEventArgs e)
         {
             var fileContent = string.Empty;

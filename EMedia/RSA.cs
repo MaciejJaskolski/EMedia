@@ -45,12 +45,12 @@ namespace EMedia
             return rsaData;
         }
 
-        public float[] getDecipheredValue(byte[] cipheredSample)
+        public float[] getDecipheredValue(float[] cipheredSample)
         {
             float[] rsaData = new float[cipheredSample.Length];
             for (int i = 0; i < cipheredSample.Length; i++)
             {
-                long value = cipheredSample[i] % this.n;
+                long value = (long)cipheredSample[i] % this.n;
                 rsaData[i] = this.CipherLoop(this.d, value);
             }
             return rsaData;
