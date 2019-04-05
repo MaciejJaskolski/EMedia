@@ -26,7 +26,7 @@ namespace EMedia
             Buffer.BlockCopy(data, 0, shortFormatCpy, 0, maxSize);
             for(int i = 0; i < shortFormatCpy.Length;i++)
             {
-                frqData[i] = shortFormatCpy[i] / (float)Int16.MaxValue;
+                frqData[i] = shortFormatCpy[i];// / (float)Int16.MaxValue;
             }
             ChannelData = frqData;
        }

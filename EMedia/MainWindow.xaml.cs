@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Media;
 using System.Windows.Forms;
+using System.Web.UI.DataVisualization.Charting;
 
 namespace EMedia
 {
@@ -57,7 +58,7 @@ namespace EMedia
             {
                 points.Add(new KeyValuePair<double, double>(p.X, p.Y));
             }
-            ((LineSeries)chartFFT.Series[0]).ItemsSource = points;
+            ((ColumnSeries)chartFFT.Series[0]).ItemsSource = points;
         }
 
         /**
