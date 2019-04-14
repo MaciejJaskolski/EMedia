@@ -39,7 +39,7 @@ namespace EMedia
                 binaryWriter.Write((Int16)header.BitPerSample);
                 binaryWriter.Write(this.FormatValue(header.Subchunk2Id));
                 binaryWriter.Write(header.Subchunk2Size); 
-                binaryWriter.Write(header.WavData.OriginalData); //???
+                binaryWriter.Write(header.WavData.OriginalData);
             }
         }
     }

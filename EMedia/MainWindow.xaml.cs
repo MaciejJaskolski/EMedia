@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Media;
 using System.Windows.Forms;
+using System.Web.UI.DataVisualization.Charting;
 
 namespace EMedia
 {
