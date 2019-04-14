@@ -19,7 +19,7 @@ namespace EMedia
             return rsa.GetCipheredValue(Data);         
         }
 
-        public float[] getDecipheredData(float[] cipheredData)
+        public byte[] getDecipheredData(float[] cipheredData)
         {
             RSA rsa = new RSA();
             return rsa.getDecipheredValue(cipheredData);

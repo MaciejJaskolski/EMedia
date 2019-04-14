@@ -26,7 +26,7 @@ namespace EMedia
             Point[] points = new Point[N/2];
             for(int i = 0; i< N/2;i++)
             {
-                points[i] = new Point(Math.Abs(sampleRate * i / N), 20 * Math.Log10(Math.Abs(complex[i].Magnitude)));
+                points[i] = new Point(Math.Abs(sampleRate * i / N), Math.Abs(complex[i].Magnitude));
             }
             
             return points;

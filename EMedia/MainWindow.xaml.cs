@@ -57,7 +57,7 @@ namespace EMedia
             {
                 points.Add(new KeyValuePair<double, double>(p.X, p.Y));
             }
-            ((LineSeries)chartFFT.Series[0]).ItemsSource = points;
+            ((ColumnSeries)chartFFT.Series[0]).ItemsSource = points;
         }
 
         /**
@@ -67,7 +67,7 @@ namespace EMedia
         {
             var basePath = AppDomain.CurrentDomain.BaseDirectory;
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = System.IO.Path.Combine(basePath, @"./cipher.wav");
+            player.SoundLocation = System.IO.Path.Combine(basePath, "./cipher.wav");
             player.Load();
             if (!isCipheredFilePlaying)
             {
@@ -90,7 +90,7 @@ namespace EMedia
         {
             var basePath = AppDomain.CurrentDomain.BaseDirectory;
             SoundPlayer player = new SoundPlayer();
-            player.SoundLocation = System.IO.Path.Combine(basePath, @"./decipher.wav");
+            player.SoundLocation = System.IO.Path.Combine(basePath, "./decipher.wav");
             player.Load();
             if (!isDecipheredFilePlaying)
             {
@@ -113,12 +113,12 @@ namespace EMedia
         {
             try
             {
-                WAVHeader cipheredFile = new WAVReader("./cipher.wav").ReadWAVFile();
+                WAVHeader cipheredFile = new WAVReader("./cipher.wav", true).ReadWAVFile();
                 Cipher cipher = new Cipher(cipheredFile.WavData.OriginalData);
-                float[] decipheredFloats = wavHeader.WavData.Denormalize();
-                float[] deciphered = cipher.getDecipheredData(decipheredFloats);
+                float[] decipheredFloats = cipheredFile.WavData.Denormalize();
+                cipheredFile.WavData.OriginalData = cipher.getDecipheredData(decipheredFloats);
                 WAVWriter wavWriter = new WAVWriter("decipher.wav");
-                wavWriter.WriteWAVFile(wavHeader);
+                wavWriter.WriteWAVFile(cipheredFile);
                 System.Windows.MessageBox.Show("Plik zostal odszyfrowany i zapisany do pliku.");
             }
             catch(Exception ex)
@@ -135,11 +135,12 @@ namespace EMedia
         {
             try
             {
-                Cipher cipher = new Cipher(wavHeader.WavData.OriginalData);
+                WAVHeader cipheredFile = wavHeader;
+                Cipher cipher = new Cipher(cipheredFile.WavData.OriginalData);
                 float[] encoded = cipher.getCipheredData();
-                wavHeader.WavData.OriginalData = wavHeader.WavData.Normalize(encoded);
+                cipheredFile.WavData.OriginalData = cipheredFile.WavData.Normalize(encoded);
                 WAVWriter wavWriter = new WAVWriter();
-                wavWriter.WriteWAVFile(wavHeader);
+                wavWriter.WriteWAVFile(cipheredFile);
                 System.Windows.MessageBox.Show("Plik zostal zaszyfrowany i zapisany do pliku.");
             }
             catch (Exception ex)

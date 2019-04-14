@@ -30,14 +30,9 @@
             <TabItem Header="DFT" Margin="-2,-2,-4,-3" Width="180">
                 <DVC:Chart Name="chartFFT" Height="410" Width="800" Title="FFT">
                     <DVC:Chart.Series>
-                        <DVC:LineSeries Title="FFTData" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}">
-                            <DVC:LineSeries.DataPointStyle>
-                                <Style TargetType="DVC:LineDataPoint">
-                                    <Setter Property="Width" Value="4"/>
-                                    <Setter Property="Height" Value="4"/>
-                                </Style>
-                            </DVC:LineSeries.DataPointStyle>
-                        </DVC:LineSeries>
+                        <DVC:ColumnSeries Title="FFTData" IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}">
+                            
+                        </DVC:ColumnSeries>
                     </DVC:Chart.Series>
                     <DVC:Chart.Axes>
                         <DVC:LinearAxis

@@ -16,9 +16,9 @@ namespace EMedia
         /**
          * Contructor, saves first 1024 samples converted into voltage, saves original bytes in OriginalData 
          */
-       public WAVData(int numChannels, byte[] data, int size)
+       public WAVData(byte[] data, int size)
        {
-            const int maxSize = 1024; //first 1000 samples
+            const int maxSize = 1024; //first 1024 samples
             OriginalData = data;
             data = data.Take(maxSize).ToArray();
             float[] frqData = new float[maxSize];
@@ -26,7 +26,7 @@ namespace EMedia
             Buffer.BlockCopy(data, 0, shortFormatCpy, 0, maxSize);
             for(int i = 0; i < shortFormatCpy.Length;i++)
             {
-                frqData[i] = shortFormatCpy[i] / (float)Int16.MaxValue;
+                frqData[i] = shortFormatCpy[i];
             }
             ChannelData = frqData;
        }
@@ -81,11 +81,11 @@ namespace EMedia
                 };
                 listCipher.Add(b);
             }
-
+            
             List<float> floats = new List<float>();
             foreach(byte[] b in listCipher)
             {
-                floats.Add(BitConverter.ToSingle(b, 0));
+                floats.Add(BitConverter.ToUInt32(b, 0));
             }
             return floats.ToArray();
         }

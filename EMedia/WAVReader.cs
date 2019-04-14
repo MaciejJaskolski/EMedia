@@ -7,6 +7,7 @@ namespace EMedia
     class WAVReader
     {
         public string Filename { get; set; }
+        bool isEncoded = false;
       
         public WAVReader()
         {
@@ -22,6 +23,19 @@ namespace EMedia
             catch(Exception e)
             {
                 
+            }
+        }
+
+        public WAVReader(string filename, bool isEncoded)
+        {
+            try
+            {
+                this.Filename = this.ValidateFileName(filename) ? filename : throw new Exception();
+                this.isEncoded = isEncoded;
+            }
+            catch (Exception e)
+            {
+
             }
         }
 
@@ -85,8 +99,8 @@ namespace EMedia
                 wavHeader.BitPerSample = binaryReader.ReadInt16();
                 wavHeader.Subchunk2Id = this.FormatValue(binaryReader.ReadInt32()); 
                 wavHeader.Subchunk2Size = binaryReader.ReadInt32();
-                byte[] readDataBytes = binaryReader.ReadBytes(wavHeader.Subchunk2Size);
-                WAVData wavData = new WAVData(wavHeader.NumChannels, readDataBytes, wavHeader.Subchunk2Size);
+                byte[] readDataBytes = isEncoded ? binaryReader.ReadBytes(wavHeader.Subchunk2Size * 4) : binaryReader.ReadBytes(wavHeader.Subchunk2Size ); ;
+                WAVData wavData = new WAVData(readDataBytes, wavHeader.Subchunk2Size);
                 wavHeader.WavData = wavData;
             }
             return wavHeader;
