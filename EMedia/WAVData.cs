@@ -11,7 +11,8 @@ namespace EMedia
     class WAVData
     {
        public byte[] OriginalData { get; set; }
-       public float[] ChannelData { get; set; }
+        public byte[] DataToSave { get; set; }
+        public float[] ChannelData { get; set; }
 
         /**
          * Contructor, saves first 1024 samples converted into voltage, saves original bytes in OriginalData 
@@ -45,49 +46,54 @@ namespace EMedia
          */
         public byte[] Normalize(float[] cipheredData)
         {
-            List<byte[]> byteList = new List<byte[]>();
-            for(int i = 0; i< cipheredData.Length; i++)
+            List<int> byteList = new List<int>();
+            try
             {
-                byte[] result = new byte[4];
-                byte[] r = this.GetBytes(cipheredData[i].ToString());
-                for (int j = 0; j< 4; j++ )
+                for (int i = 0; i < OriginalData.Length; i++)
                 {
-                    result[j] = 0;
+                    int x = (int)cipheredData[i] ^ OriginalData[i];
+                    byteList.Add(BitConverter.GetBytes(x)[0]);
                 }
-                for (int j = 0; j < r.Length; j++)
-                {
-                    result[j] = r[j];
-                }
-                byteList.Add(result);
             }
-            byte[] bytes = byteList.SelectMany(a => a).ToArray();
-            return bytes;
+            catch(Exception e)
+            {
+                System.Windows.MessageBox.Show(e.ToString());
+            }
+            int[] result = byteList.ToArray();
+            byte[] b = new byte[OriginalData.Length];
+            for (int i = 0; i < OriginalData.Length; i++)
+            {
+                b[i] = BitConverter.GetBytes(result[i])[0];
+            }
+            return b;
         }
 
         /*
          * Returns an array of deciphered bytes for further use
          */
-        public float[] Denormalize()
+        public byte[] Denormalize(float[] ciphered)
         {
-            List<byte[]> listCipher = new List<byte[]>();
-            for (int i = 0; i + 3 < OriginalData.Length; i += 4)
+            List<int> byteList = new List<int>();
+            try
             {
-                byte[] b = new byte[]
+                for (int i = 0; i < OriginalData.Length; i++)
                 {
-                    OriginalData[i],
-                    OriginalData[i+1],
-                    OriginalData[i+2],
-                    OriginalData[i+3]
-                };
-                listCipher.Add(b);
+                    int x = (int)ciphered[i] ^ OriginalData[i];
+                    byte[] y = BitConverter.GetBytes(x);
+                    byteList.Add(BitConverter.GetBytes(x)[0]);
+                }
             }
-            
-            List<float> floats = new List<float>();
-            foreach(byte[] b in listCipher)
+            catch (Exception e)
             {
-                floats.Add(BitConverter.ToUInt32(b, 0));
+                System.Windows.MessageBox.Show(e.ToString());
             }
-            return floats.ToArray();
+            int[] result = byteList.ToArray();
+            byte[] b = new byte[OriginalData.Length];
+            for (int i = 0; i < OriginalData.Length; i++)
+            {
+                b[i] = BitConverter.GetBytes(result[i])[0];
+            }
+            return b;
         }
     }
 }

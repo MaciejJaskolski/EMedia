@@ -20,7 +20,7 @@ namespace EMedia
             return this.p*this.q;
         }
 
-        private long CipherLoop(long exponent, long originalValue)
+        private float CipherLoop(long exponent, long originalValue)
         {
             long cipheredValue = 1;
             for(long i = exponent; i > 0; i/=2)
@@ -31,27 +31,39 @@ namespace EMedia
                 }
                 originalValue = (originalValue * originalValue) % this.n;
             }
-            return cipheredValue;
+            return (float)cipheredValue;
         }
 
         public float[] GetCipheredValue(byte[] normalSample)
         {
-            float[] rsaData = new float[normalSample.Length];
-            for(int i =0;i<normalSample.Length;i++)
+            float[] rsaData = new float[this.n];
+            try
             {
-                long value = normalSample[i] % this.n;
-                rsaData[i] = this.CipherLoop(this.e, value);
+                for (long i = 0; i < normalSample.Length; i++)
+                {
+                    rsaData[i] = this.CipherLoop(this.e, i);
+                }
+            }
+            catch(Exception e)
+            {
+                System.Windows.MessageBox.Show("Problem przy szyfrowaniu.", e.ToString());
             }
             return rsaData;
         }
-
-        public byte[] getDecipheredValue(float[] cipheredSample)
+        
+        public float[] getDecipheredValue(byte[] cipheredSample)
         {
-            byte[] rsaData = new byte[cipheredSample.Length];
-            for (int i = 0; i < cipheredSample.Length; i++)
+            float[] rsaData = new float[this.n];
+            try
             {
-                long value = (long)cipheredSample[i] % this.n;
-                rsaData[i] = (byte)this.CipherLoop(this.d, value);
+                for (long i = 0; i < this.n; i++)
+                {
+                    rsaData[i] = this.CipherLoop(this.e, i);
+                }
+            }
+            catch(Exception e)
+            {
+                System.Windows.MessageBox.Show("Problem przy odszyfrowaniu.", e.ToString());
             }
             return rsaData;
         }

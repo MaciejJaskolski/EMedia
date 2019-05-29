@@ -116,8 +116,8 @@ namespace EMedia
             {
                 WAVHeader cipheredFile = new WAVReader("./cipher.wav", true).ReadWAVFile();
                 Cipher cipher = new Cipher(cipheredFile.WavData.OriginalData);
-                float[] decipheredFloats = cipheredFile.WavData.Denormalize();
-                cipheredFile.WavData.OriginalData = cipher.getDecipheredData(decipheredFloats);
+                float[] deciphered = cipher.getDecipheredData(cipheredFile.WavData.OriginalData);
+                cipheredFile.WavData.DataToSave = cipheredFile.WavData.Denormalize(deciphered);
                 WAVWriter wavWriter = new WAVWriter("decipher.wav");
                 wavWriter.WriteWAVFile(cipheredFile);
                 System.Windows.MessageBox.Show("Plik zostal odszyfrowany i zapisany do pliku.");
@@ -126,7 +126,6 @@ namespace EMedia
             {
                 System.Windows.MessageBox.Show("Najpierw trzeba wczytac plik.");
             }
-       
         }
 
         /**
@@ -139,7 +138,7 @@ namespace EMedia
                 WAVHeader cipheredFile = wavHeader;
                 Cipher cipher = new Cipher(cipheredFile.WavData.OriginalData);
                 float[] encoded = cipher.getCipheredData();
-                cipheredFile.WavData.OriginalData = cipheredFile.WavData.Normalize(encoded);
+                cipheredFile.WavData.DataToSave = cipheredFile.WavData.Normalize(encoded);
                 WAVWriter wavWriter = new WAVWriter();
                 wavWriter.WriteWAVFile(cipheredFile);
                 System.Windows.MessageBox.Show("Plik zostal zaszyfrowany i zapisany do pliku.");
